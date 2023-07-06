@@ -94,12 +94,12 @@ router.get(
         where: {
           classId: classId,
         },
-        include: {
-          Class: true,
-          // remove this
-          StudentTermFee: true,
-          AdditionalFeeStudent: true,
-        },
+        // include: {
+        //   Class: true,
+        //   // remove this
+        //   StudentTermFee: true,
+        //   AdditionalFeeStudent: true,
+        // },
         skip: startIndex,
         take: limit,
       });
