@@ -1,69 +1,35 @@
-import router from "../routes";
-const request = require("supertest");
-const express = require("express");
+import request from 'supertest';
+import app from '../../src/index';
+import { PrismaClient } from '@prisma/client';
 
-let app = express();
+const prisma = new PrismaClient();
 
-beforeAll(() => {
-  app = express();
-  app.use(express.json());
-  app.use(router);
-});
-
-describe("Test student routes", () => {
-  it("creates a new student", async () => {
-    const studentData = {
-      first_name: "John",
-      last_name: "Doe",
-      dob: "2002-05-13T13:31:13.332Z",
-      classId: 5,
-      gender: "MALE",
-      // ... other required fields here
-    };
-    const res = await request(app).post("/students/post").send(studentData);
-    expect(res.statusCode).toEqual(201);
-    expect(res.body).toHaveProperty("name", "John Doe");
-    // ... other assertions here
+describe('POST /api/teachers/post', () => {
+  beforeAll(async () => {
+    await prisma.teacher.deleteMany({});
   });
 
-  it("gets all students with pagination", async () => {
-    const res = await request(app).get("/students?page=1&limit=10");
-    expect(res.statusCode).toEqual(200);
-    expect(res.body).toHaveProperty("currentPage", 1);
-    expect(res.body).toHaveProperty("totalItems");
-    expect(res.body).toHaveProperty("items");
+  afterAll(async () => {
+    await prisma.$disconnect();
   });
 
-  it("gets all students", async () => {
-    const res = await request(app).get("/students/all");
-    expect(res.statusCode).toEqual(200);
-    expect(res.body).toBeInstanceOf(Array);
+  it('should create a new teacher', async () => {
+    const data = { name: 'John Doe', email: 'johndoe@example.com' };
+    const response = await request(app)
+      .post('/api/teachers/post')
+      .send(data)
+      .expect(201);
+
+    expect(response.body).toMatchObject(data);
   });
 
-  it("gets a single student", async () => {
-    // Replace '1' with a valid student ID in your test DB
-    const res = await request(app).get("/student/1");
-    expect(res.statusCode).toEqual(200);
-    expect(res.body).toHaveProperty("id", 1);
-  });
+  it('should return an error if data is missing', async () => {
+    const data = { email: 'johndoe@example.com' };
+    const response = await request(app)
+      .post('/api/teachers/post')
+      .send(data)
+      .expect(500);
 
-  it("updates a student", async () => {
-    const updateData = {
-      first_name: "Ebbe",
-      last_name: "Blind",
-      dob: "2010-05-13T13:31:13.332Z",
-      classId: 4,
-      gender: "MALE",
-    };
-    // Replace '1' with a valid student ID in your test DB
-    const res = await request(app).patch("/student/1").send(updateData);
-    expect(res.statusCode).toEqual(202);
-    expect(res.body).toHaveProperty("name", "Updated Name");
-  });
-
-  it("deletes a student", async () => {
-    // Replace '1' with a valid student ID in your test DB
-    const res = await request(app).delete("/student/1");
-    expect(res.statusCode).toEqual(204);
+    expect(response.body).toHaveProperty('message');
   });
 });
