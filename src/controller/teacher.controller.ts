@@ -1,28 +1,28 @@
-import { NextFunction, Request, Response, Router } from "express";
-import { PrismaClient } from "@prisma/client";
+import { NextFunction, Request, Response, Router } from 'express';
+import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 const router = Router();
 
 // post new teacher
 
-router.post(
-  "/teachers/post",
-  async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const data = req.body;
-      const teacher = await prisma.teacher.create({ data });
-      res.status(201).json(teacher);
-    } catch (error) {
-      next(error);
-    }
-  }
-);
+// router.post(
+//   "/teachers/post",
+//   async (req: Request, res: Response, next: NextFunction) => {
+//     try {
+//       const data = req.body;
+//       const teacher = await prisma.teacher.create({ data });
+//       res.status(201).json(teacher);
+//     } catch (error) {
+//       next(error);
+//     }
+//   }
+// );
 
 //  get all teachers
 
 router.get(
-  "/teachers/all",
+  '/teachers/all',
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const teacher = await prisma.teacher.findMany();
@@ -34,7 +34,7 @@ router.get(
 );
 
 router.get(
-  "/teachers",
+  '/teachers',
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const page = parseInt(req.query.page as string, 10) || 1;
@@ -44,7 +44,7 @@ router.get(
 
       const students = await prisma.teacher.findMany({
         orderBy: {
-          createdAt: "desc",
+          createdAt: 'desc',
         },
         // return student's class name
         include: {
@@ -71,7 +71,7 @@ router.get(
 
 // get one teacher
 router.get(
-  "/teacher/:id",
+  '/teacher/:id',
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
@@ -81,7 +81,7 @@ router.get(
         },
       });
       if (!teacher) {
-        return res.status(404).json({ message: "Student not found" });
+        return res.status(404).json({ message: 'Student not found' });
       }
       res.status(200).json(teacher);
     } catch (error) {
@@ -92,7 +92,7 @@ router.get(
 
 // update teacher
 router.patch(
-  "/teacher/:id",
+  '/teacher/:id',
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
@@ -106,14 +106,14 @@ router.patch(
       res.status(202).json(teacher);
     } catch (error) {
       next(error);
-      return res.status(404).json({ message: "Teacher not found" });
+      return res.status(404).json({ message: 'Teacher not found' });
     }
   }
 );
 
 // delete teacher
 router.delete(
-  "/teacher/:id",
+  '/teacher/:id',
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
@@ -128,7 +128,7 @@ router.delete(
       });
 
       if (!teacherToDelete) {
-        return res.status(404).json({ message: "Teacher not found" });
+        return res.status(404).json({ message: 'Teacher not found' });
       }
 
       const { Class } = teacherToDelete;
@@ -136,7 +136,7 @@ router.delete(
       if (Class && Class.length > 0) {
         return res.status(400).json({
           message:
-            "Cannot delete a teacher who is assigned as the teacher for a class",
+            'Cannot delete a teacher who is assigned as the teacher for a class',
         });
       }
 
@@ -154,7 +154,7 @@ router.delete(
 );
 // seach teacher
 router.get(
-  "/teachers/search/:name",
+  '/teachers/search/:name',
   async (req: Request, res: Response, next: NextFunction) => {
     const { name } = req.params;
     try {
@@ -168,14 +168,14 @@ router.get(
           OR: [
             {
               first_name: {
-                contains: name?.toString().toLowerCase() || "",
-                mode: "insensitive",
+                contains: name?.toString().toLowerCase() || '',
+                mode: 'insensitive',
               },
             },
             {
               last_name: {
-                contains: name?.toString().toLowerCase() || "",
-                mode: "insensitive",
+                contains: name?.toString().toLowerCase() || '',
+                mode: 'insensitive',
               },
             },
           ],
@@ -185,7 +185,7 @@ router.get(
       });
 
       if (!teachers) {
-        return res.status(404).json({ error: "Teacher not found" });
+        return res.status(404).json({ error: 'Teacher not found' });
       }
 
       const totalItems = await prisma.teacher.count({
@@ -193,14 +193,14 @@ router.get(
           OR: [
             {
               first_name: {
-                contains: name?.toString().toLowerCase() || "",
-                mode: "insensitive",
+                contains: name?.toString().toLowerCase() || '',
+                mode: 'insensitive',
               },
             },
             {
               last_name: {
-                contains: name?.toString().toLowerCase() || "",
-                mode: "insensitive",
+                contains: name?.toString().toLowerCase() || '',
+                mode: 'insensitive',
               },
             },
           ],
