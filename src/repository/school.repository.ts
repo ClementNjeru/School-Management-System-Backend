@@ -3,18 +3,18 @@ const { FormatData } = require('../utils');
 
 const prisma = new PrismaClient();
 
-class ClassRepository {
-  async CreateClass(args: any) {
-    const Class = await prisma.class.create({ data: args });
-    return Class;
+class SchoolRepository {
+  async CreateSchool(args: any) {
+    const school = await prisma.school.create({ data: args });
+    return school;
   }
 
-  async GetAllClasses(args: { page: number; limit: number }) {
+  async GetAllSchools(args: { page: number; limit: number }) {
     try {
       const { page, limit } = args;
       const startIndex = (page - 1) * limit;
       const endIndex = startIndex + limit;
-      const Classes = await prisma.class.findMany({
+      const schools = await prisma.school.findMany({
         orderBy: {
           createdAt: 'desc',
         },
@@ -22,58 +22,45 @@ class ClassRepository {
         take: limit,
       });
 
-      const totalItems = await prisma.class.count();
+      const totalItems = await prisma.school.count();
       return {
         currentPage: page,
         totalPages: Math.ceil(totalItems / limit),
         itemsPerPage: limit,
         totalItems: totalItems,
-        items: Classes.slice(0, endIndex),
+        items: schools.slice(0, endIndex),
       };
     } catch (error) {
       FormatData(error);
     }
   }
 
-  async GetClassById(id: number) {
+  async GetSchoolById(id: number) {
     try {
-      const Class = await prisma.class.findUnique({
+      const school = await prisma.school.findUnique({
         where: {
           id,
         },
       });
-      return Class;
+      return school;
     } catch (error) {
       FormatData(error);
     }
   }
 
-  async UpdateClass(id: number, args: any) {
+  async UpdateSchool(id: number, args: any) {
     try {
-      const Class = await prisma.class.update({
+      const school = await prisma.school.update({
         where: {
           id,
         },
         data: args,
       });
-      return Class;
-    } catch (error) {
-      FormatData(error);
-    }
-  }
-
-  async DeleteClass(id: number) {
-    try {
-      const Class = await prisma.class.delete({
-        where: {
-          id,
-        },
-      });
-      return Class;
+      return school;
     } catch (error) {
       FormatData(error);
     }
   }
 }
 
-module.exports = ClassRepository;
+module.exports = SchoolRepository;
