@@ -14,4 +14,6 @@ export const validateKenyanPhoneNumber = (phoneNumber: string) =>
 
 const phoneRegex = /^(\+?254|0|01)?([1|7])([0-9]{8})$/;
 
-export { phoneRegex };
+const emailRegex = /^\w+([\\.-]?\w+)*@\w+([\\.-]?\w+)*(\.\w{2,3})+$/;
+
+export { phoneRegex, emailRegex };

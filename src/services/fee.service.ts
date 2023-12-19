@@ -1,4 +1,4 @@
-const { FeeRepository } = require('./repository');
+const { FeeRepository } = require('../repository');
 
 class FeeService {
   private repository;

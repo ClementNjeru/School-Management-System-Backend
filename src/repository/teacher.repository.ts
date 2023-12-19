@@ -39,17 +39,12 @@ class TeacherRepository {
     }
   }
 
-  async GetTeacherById(id: number) {
-    try {
-      const teacher = await prisma.teacher.findUnique({
-        where: {
-          id,
-        },
-      });
-      return teacher;
-    } catch (error) {
-      FormatData(error);
-    }
+  async FindById(id: number) {
+    return await prisma.teacher.findUnique({
+      where: {
+        id,
+      },
+    });
   }
 
   async UpdateTeacher(id: number, args: any) {

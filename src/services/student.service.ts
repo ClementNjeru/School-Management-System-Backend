@@ -1,6 +1,6 @@
-const { TeacherRepository } = require('../repository');
-const { FormatData } = require('../utils');
-class TeacherService {
+const { StudentRepository } = require('../repository');
+// const { FormatData } = require('../utils');
+class StudentService {
   private repository;
 
   constructor() {
@@ -42,4 +42,4 @@ class TeacherService {
   }
 }
 
-module.exports = TeacherService;
+module.exports = StudentService;

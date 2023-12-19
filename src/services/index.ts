@@ -1,7 +1,7 @@
 module.exports = {
   TeacherService: require('./teacher.service'),
   ClassService: require('./class.service'),
-  ReportService: require('./reports.service'),
+  ReportService: require('./report.service'),
   AuthService: require('./auth.service'),
   SchoolService: require('./school.service'),
   StudentService: require('./student.service'),

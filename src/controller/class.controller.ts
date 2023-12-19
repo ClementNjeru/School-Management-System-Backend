@@ -7,7 +7,7 @@ const router = Router();
 // post new class
 
 router.post(
-  '/classes/post',
+  '/api/classes/post',
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const data = req.body;
@@ -21,7 +21,7 @@ router.post(
 
 // get all classes
 router.get(
-  '/classes/all',
+  '/api/classes/all',
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const grade = await prisma.class.findMany({
@@ -37,7 +37,7 @@ router.get(
 );
 
 router.get(
-  '/classes',
+  '/api/classes',
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const page = parseInt(req.query.page as string, 10) || 1;
@@ -76,7 +76,7 @@ router.get(
 // Endpoint for getting students of a specific class
 
 router.get(
-  '/class/:classId/students',
+  '/api/class/:classId/students',
   async (req: Request, res: Response, next: NextFunction) => {
     const classId = parseInt(req.params.classId);
     const page = parseInt(req.query.page as string, 10) || 1;
@@ -139,7 +139,7 @@ router.get(
 // get one class
 
 router.get(
-  '/class/:id',
+  '/api/class/:id',
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
@@ -165,7 +165,7 @@ router.get(
 //   update class
 
 router.patch(
-  '/class/:id',
+  '/api/class/:id',
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
@@ -185,7 +185,7 @@ router.patch(
 
 // delete class
 router.delete(
-  '/class/:id',
+  '/api/class/:id',
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
@@ -215,7 +215,7 @@ router.delete(
 
 // search class
 router.get(
-  '/classes/search/:name',
+  '/api/classes/search/:name',
   async (req: Request, res: Response, next: NextFunction) => {
     const { name } = req.params;
     try {

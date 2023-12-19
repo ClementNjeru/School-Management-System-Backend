@@ -74,6 +74,52 @@ class ClassRepository {
       FormatData(error);
     }
   }
+
+  async SearchTeacherByName(args: {
+    name: string;
+    page: number;
+    limit: number;
+  }) {
+    try {
+      const { name, page, limit } = args;
+      const startIndex = (page - 1) * limit;
+      const endIndex = startIndex + limit;
+
+      const classes = await prisma.class.findMany({
+        where: {
+          name: {
+            contains: name?.toString().toLowerCase() || '',
+            mode: 'insensitive',
+          },
+        },
+        skip: startIndex,
+        take: limit,
+      });
+
+      if (!classes) {
+        throw new Error('class not found');
+      }
+
+      const totalItems = await prisma.class.count({
+        where: {
+          name: {
+            contains: name?.toString().toLowerCase() || '',
+            mode: 'insensitive',
+          },
+        },
+      });
+
+      return {
+        currentPage: page,
+        totalPages: Math.ceil(totalItems / limit),
+        itemsPerPage: limit,
+        totalItems: totalItems,
+        items: classes.slice(0, endIndex),
+      };
+    } catch (error) {
+      FormatData(error);
+    }
+  }
 }
 
 module.exports = ClassRepository;
