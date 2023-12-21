@@ -32,9 +32,19 @@ class ReportService {
     return totalStudentByClass;
   }
 
-  async GetpaymentModes() {
+  async GetPaymentModes() {
     const paymentModes = await this.repository.GetpaymentModes();
     return paymentModes;
+  }
+
+  async GetTodaysSales() {
+    const revenue = await this.repository.GetTodaysSales();
+    return revenue;
+  }
+
+  async GetClassPaymentReport(classId: number) {
+    const revenue = await this.repository.GetClassPaymentReport(classId);
+    return revenue;
   }
 }
 

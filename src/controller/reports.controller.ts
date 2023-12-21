@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import { PrismaClient } from '@prisma/client';
-import { Decimal } from 'decimal.js';
 const prisma = new PrismaClient();
 const router = Router();
 
@@ -95,7 +94,6 @@ router.get(
 );
 
 // todays sales
-//
 router.get(
   '/payments/get/paymentmodes',
   async (req: Request, res: Response, next: NextFunction) => {

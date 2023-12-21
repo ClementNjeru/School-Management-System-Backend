@@ -2,7 +2,7 @@ import { Application } from 'express';
 
 const express = require('express');
 const cors = require('cors');
-const { teachers, auth } = require('./api');
+const { teachers, auth, report } = require('./api');
 
 // const { CreateChannel } = require('./utils');
 
@@ -14,6 +14,7 @@ module.exports = async (app: Application) => {
   //   const channel = await CreateChannel();
   teachers(app);
   auth(app);
+  report(app);
 
   // error handling
 };

@@ -68,6 +68,105 @@ class ReportRepository {
       FormatData(error);
     }
   }
+
+  async GetTodaysSales() {
+    try {
+      const today = new Date();
+      // CHANGE THIS
+      const startOfDay = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate()
+      );
+      const endOfDay = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate() + 1
+      );
+
+      const paymentModes = [
+        'BANK',
+        'MPESA',
+        'CHEQUE',
+        'CREDIT',
+        'CASH',
+        'CARD',
+      ];
+
+      const revenueByPaymentMode = await Promise.all(
+        paymentModes.map(async (mode) => {
+          const revenue = await prisma.feePayment.aggregate({
+            where: {
+              payment_mode: mode,
+              createdAt: {
+                gte: startOfDay,
+                lt: endOfDay,
+              },
+            },
+            _sum: {
+              amount: true,
+            },
+          });
+
+          return {
+            name: mode,
+            value: Number(revenue._sum?.amount) ?? 0,
+          };
+        })
+      );
+
+      return {
+        todayRevenueByPaymentMode: revenueByPaymentMode,
+      };
+    } catch (error) {
+      FormatData(error);
+    }
+  }
+
+  async GetClassPaymentReport(classId: number) {
+    try {
+      // Students who have paid full fee
+      const paidStudentsCount = await prisma.student.count({
+        where: {
+          classId: classId,
+          feeBalance: {
+            equals: 0,
+          },
+        },
+      });
+
+      // Students who have not made any payment
+      const unpaidStudentsCount = await prisma.student.count({
+        where: {
+          classId: classId,
+          feePaid: {
+            equals: 0,
+          },
+        },
+      });
+
+      // Students who have made some payment but not fully paid
+      const partialPaidStudentsCount = await prisma.student.count({
+        where: {
+          classId: classId,
+          feePaid: {
+            gt: 0,
+          },
+          feeBalance: {
+            gt: 0,
+          },
+        },
+      });
+
+      return [
+        { name: 'paid', value: paidStudentsCount },
+        { name: 'unpaid', value: unpaidStudentsCount },
+        { name: 'partial', value: partialPaidStudentsCount },
+      ];
+    } catch (error) {
+      FormatData(error);
+    }
+  }
 }
 
 module.exports = ReportRepository;
